@@ -41,7 +41,7 @@ int main() {
             dteta = (current_teta - teta[i-1]) / STEP;
         }
         // Chama a função de controle de impedância com o teta atual e o dteta discreto
-        torque[i] = impedance_control(k, b, dteta, teta_eq, current_teta);
+        torque[i] = impedance_control(k, b, teta_eq, dteta,  current_teta);
     }
 
     printf("time\ttorque\n");
