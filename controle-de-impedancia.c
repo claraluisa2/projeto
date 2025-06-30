@@ -4,7 +4,7 @@
 
 #define PI 3.141592653589793
 #define STEP 0.0125
-#define TOTAL_TIME 10.0
+#define TOTAL_TIME 0.1
 
 double impedance_control(double k, double b, double teta_eq, double dteta, double teta) {
     double torque = k * (teta - teta_eq) - b * dteta;
@@ -29,7 +29,6 @@ int main() {
     }
 
     for (int i = 0; i < N; i++) {
-        double current_teta = teta[i];
         double dteta;
 
         if (i == 0) {
@@ -38,10 +37,10 @@ int main() {
         } else {
             // Derivada discreta (aproximação da diferença para trás)
             // (teta[n] - teta[n-1]) / STEP
-            dteta = (current_teta - teta[i-1]) / STEP;
+            dteta = (teta[i] - teta[i-1]) / STEP;
         }
         // Chama a função de controle de impedância com o teta atual e o dteta discreto
-        torque[i] = impedance_control(k, b, teta_eq, dteta,  current_teta);
+        torque[i] = impedance_control(k, b, teta_eq, dteta, teta[i]);
     }
 
     printf("time\ttorque\n");
