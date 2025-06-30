@@ -6,9 +6,7 @@
 #define STEP 0.0125
 #define TOTAL_TIME 10.0
 
-double impedance_control(double t, double k, double b, double teta_eq, double amplitude, double freq) {
-    double teta = amplitude * sin(2 * PI * freq * t); // posição da junta no tempo t
-    double dteta = 2 * PI * freq * amplitude * cos(2 * PI * freq * t); //velocidade da junta no tempo t
+double impedance_control(double k, double b, double teta_eq, double dteta, double teta) {
     double torque = k * (teta - teta_eq) - b * dteta;
     return torque;
 }
@@ -22,11 +20,28 @@ int main() {
 
     int N = ((int)(TOTAL_TIME / STEP) + 1);
     double time[N];
+    double teta[N]; //vetor de valores de teta (velocidade)
     double torque[N];
 
     for (int i = 0; i < N; i++) {
         time[i] = i * STEP;
-        torque[i] = impedance_control(time[i], k, b, teta_eq, 0.5, 1);
+        teta[i] = 1 * sin(2 * PI * 0.5 * time[i]);
+    }
+
+    for (int i = 0; i < N; i++) {
+        double current_teta = teta[i];
+        double dteta;
+
+        if (i == 0) {
+            // Para o primeiro ponto dteta = 0
+            dteta = 0.0;
+        } else {
+            // Derivada discreta (aproximação da diferença para trás)
+            // (teta[n] - teta[n-1]) / STEP
+            dteta = (current_teta - teta[i-1]) / STEP;
+        }
+        // Chama a função de controle de impedância com o teta atual e o dteta discreto
+        torque[i] = impedance_control(k, b, dteta, teta_eq, current_teta);
     }
 
     printf("time\ttorque\n");
