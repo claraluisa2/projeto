@@ -13,10 +13,6 @@ float impedance_control(float k, float b, float teta_eq, float dteta, float teta
 }
 
 int main() {
-
-    struct timespec inicio, fim;
-    double tempo_gasto;
-    
  
     FILE *arquivo_csv;
 
@@ -55,8 +51,6 @@ int main() {
         torque[i] = impedance_control(k, b, teta_eq, dteta[i], teta[i]);
     }
 
-    // --- Medição ---: Inicia o cronômetro
-    clock_gettime(CLOCK_MONOTONIC, &inicio);
     // Escrever o cabeçalho no arquivo CSV (usando vírgula como separador)
     fprintf(arquivo_csv, "time,teta,dteta,torque\n");
 
@@ -69,13 +63,6 @@ int main() {
     fclose(arquivo_csv);
 
     printf("Arquivo 'resultado_impedancia.csv' gerado com sucesso!\n");
-
-    clock_gettime(CLOCK_MONOTONIC, &fim);
-
-    tempo_gasto = (fim.tv_sec - inicio.tv_sec) + (fim.tv_nsec - inicio.tv_nsec) / 1000000000.0;
-
-    printf("Tempo de execução: %f segundos\n", tempo_gasto);
-
 
     return 0;
 }
