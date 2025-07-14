@@ -4,7 +4,7 @@
 
 #define PI 3.141592653589793
 #define STEP 0.0125
-#define TOTAL_TIME 25
+#define TOTAL_TIME 10
 
 
 float impedance_control(float k, float b, float teta_eq, float dteta, float teta) {
@@ -57,7 +57,7 @@ int main() {
     //Escreve os dados no arquivo CSV dentro do loop
     for (int i = 0; i < N; i++) {
 
-        fprintf(arquivo_csv, "%.3f,%.3f,%.3f,%.3f\n", time[i], teta[i], dteta[i], torque[i]);
+        fprintf(arquivo_csv, "%.4f,%.4f,%.4f,%.4f\n", time[i], teta[i], dteta[i], torque[i]);
     }
 
     fclose(arquivo_csv);
